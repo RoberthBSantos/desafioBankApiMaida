@@ -18,6 +18,12 @@ public class Transfer {
 
     private BigDecimal amount;
 
+    public Transfer(Account sourceAccount, Account destinationAccount, BigDecimal amount) {
+        this.sourceAccount = sourceAccount;
+        this.destinationAccount = destinationAccount;
+        this.amount = amount;
+    }
+
     public Long getId() {
         return id;
     }
