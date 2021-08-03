@@ -3,6 +3,9 @@ package br.com.maida.Bankapi;
 import br.com.maida.Bankapi.controller.AccountController;
 import br.com.maida.Bankapi.controller.dto.AccountDTO;
 import br.com.maida.Bankapi.controller.dto.UserDTO;
+import br.com.maida.Bankapi.controller.form.AccountForm;
+import br.com.maida.Bankapi.controller.form.BalanceForm;
+import br.com.maida.Bankapi.controller.form.TransferForm;
 import br.com.maida.Bankapi.models.Account;
 import br.com.maida.Bankapi.models.User;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -19,7 +22,9 @@ import org.springframework.test.web.servlet.MvcResult;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 @AutoConfigureMockMvc
@@ -47,7 +52,7 @@ class BankApiApplicationTests {
 	}
 
 	@Test
-	public void CreateUser() throws Exception {
+	public void createUser() throws Exception {
 		User user = new User("joao","joao@maida.com",  "123456");
 		mockMvc.perform(MockMvcRequestBuilders.post("/users")
 						.content(objectMapper.writeValueAsString(user))
@@ -69,5 +74,33 @@ class BankApiApplicationTests {
 				.andExpect(jsonPath("$.email").value("joao@maida.com"));
 	}
 
+	@Test
+	public void accountCreate() throws Exception {
+		AccountForm form = new AccountForm();
+		form.setNumber("1234-5");
+		form.setBalance(new BigDecimal(100));
+
+		Map<?, ?> loginUsuario = getAuthUser();
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/accounts")
+						.header("Authorization", "Bearer " + loginUsuario.get("token").toString())
+						.content(objectMapper.writeValueAsString(form))
+						.contentType(MediaType.APPLICATION_JSON)
+						.accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
+	}
+
+	@Test
+	public void accountWithoutToken() throws Exception {
+		AccountForm form = new AccountForm();
+		form.setNumber("12345-8");
+		form.setBalance(new BigDecimal(100));
+
+		mockMvc.perform(MockMvcRequestBuilders.post("/accounts")
+						.content(objectMapper.writeValueAsString(form))
+						.contentType(MediaType.APPLICATION_JSON)
+						.accept(MediaType.APPLICATION_JSON))
+				.andExpect(MockMvcResultMatchers.status().isUnauthorized());
+	}
 
 }
