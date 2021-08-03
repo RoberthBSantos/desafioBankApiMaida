@@ -3,7 +3,7 @@
 
 ## Detalhes do projeto
 
-* #### Projeto em Spring Boot para criar uma API para o gerenciamento de cadastro de usuarios e contas, como támbem a listagem desses cadastros.
+* #### Projeto em Spring Boot para criar uma API para o gerenciamento de cadastro de usuarios e contas.
 
 ## Tecnologias Ultilizadas
 
