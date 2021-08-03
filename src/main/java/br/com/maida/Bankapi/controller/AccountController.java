@@ -57,8 +57,7 @@ public class AccountController {
     }
 
     @PostMapping("/transfer")
-    @Transactional
-    public ResponseEntity<?> Transfer(@RequestBody @Valid TransferForm form, @RequestHeader("Authorization") String token, UriComponentsBuilder uriComponentsBuilder){
+    public ResponseEntity<?> transfer(@RequestBody @Valid TransferForm form, @RequestHeader("Authorization") String token, UriComponentsBuilder uriComponentsBuilder){
         User user = authUser(token);
         Transfer transfer = form.convert(accountRepository,user);
 
@@ -83,7 +82,7 @@ public class AccountController {
 
     }
     @PostMapping("/balance")
-    public ResponseEntity<?> Balance(@RequestBody @Valid BalanceForm form, @RequestHeader("Authorization") String token,UriComponentsBuilder uriComponentsBuilder){
+    public ResponseEntity<?> balance(@RequestBody @Valid BalanceForm form, @RequestHeader("Authorization") String token,UriComponentsBuilder uriComponentsBuilder){
         Account account = form.accountRetrieve(accountRepository);
 
         if (account==null){

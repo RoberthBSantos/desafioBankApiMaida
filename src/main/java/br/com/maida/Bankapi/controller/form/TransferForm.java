@@ -5,6 +5,7 @@ import br.com.maida.Bankapi.models.Transfer;
 import br.com.maida.Bankapi.models.User;
 import br.com.maida.Bankapi.repository.AccountRepository;
 
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -12,11 +13,13 @@ import java.math.BigDecimal;
 
 public class TransferForm {
 
+
     @NotEmpty @NotNull
     private String source_account_number;
     @NotEmpty @NotNull
     private String destination_account_number;
-    @NotEmpty @Min(value = 0)
+    @DecimalMin(value = "0.00", inclusive = false, message = "Quantidade deve ser maior que zero")
+    @NotNull
     private BigDecimal amount;
 
     public String getSource_account_number() {
@@ -42,6 +45,7 @@ public class TransferForm {
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
+
     public Transfer convert(AccountRepository accountRepository, User authUser){
         Account source_account = accountRepository.findByNumber(source_account_number);
         Account destination_account = accountRepository.findByNumber(destination_account_number);
